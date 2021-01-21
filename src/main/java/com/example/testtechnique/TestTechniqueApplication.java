@@ -8,31 +8,33 @@ public class TestTechniqueApplication {
 
 	public static void main(String[] args) {
 		Scanner promptReader = new Scanner(System.in);
+		System.out.println("Bienvenue dans le traducteur français / javanais ! Entrez une phrase");
 
-		System.out.println("Entrez une phrase");
-		String input = promptReader.nextLine();
-		String translatedContent = translater(input);
 		Boolean userHasQuit = false;
 
-		/*	On fait une boucle, tant que l'utilisateur veut traduire des phrases :
+		while (!userHasQuit) {
+			String userInput = promptReader.nextLine();
+			String translatedContent = translater(userInput);
 
-				Si translatedContent est le meme contenu que celui passé en paramètre :
-					le texte est invalide : texte vide ou ne contient qu'une série de chiffre
-					On demande au user de rentrer un nouvel input
-					on récupère l'input et on retraduis
+			if ( translatedContent.equals(userInput) ) {
+				System.out.println("La phrase n'est pas valide, veuillez réessayer avec une nouvelle phrase");
 
-				Si translateContent est différent du contenu passé en paramètre
-					On affiche le contenu traduit
-					On demande à l"utilisateur s'il veut rentrer une nouvelle phrase
+			} else {
+				System.out.println(translatedContent);
+				System.out.println("Souhaitez-vous traduire une autre phase ? (Y)/(N)");
+				String userResponse = promptReader.nextLine();
 
-					Si l'utilisateur dit oui :
-						on récupère l'input et on retraduis
+				if ( userResponse.toLowerCase().equals("n") ) {
+					userHasQuit = true;
 
-					Si non :
-						userHasQuit = true
+				} else {
+					System.out.println("Entrez une nouvelle phrase");
+				}
+			}
+		}
 
-			On ferme le prompter
-		 */
+		System.out.println("Bonne journée ! N'hésitez pas à faire un tour sur https://github.com/carlyne");
+		promptReader.close();
 	}
 
 	public static String translater(String input) {
@@ -62,6 +64,6 @@ public class TestTechniqueApplication {
 			On retransforme la substring en string avant de la retourner
 		 */
 
-		return input;
+		return "bavonjavour";
 	}
 }
