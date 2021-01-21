@@ -1,6 +1,7 @@
 package com.example.testtechnique;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,43 +41,36 @@ public class TestTechniqueApplication {
 	}
 
 	public static String translater(String userInput) {
+		Boolean javaToFrench = false;
 
 		if ( userInput.isEmpty() ) {
 			return userInput;
 		}
 
-		String translatedContent = "";
+		String [] splitInput = userInput.split("\\s+");
 
-		for ( String word : userInput.split("\\s+") ) {
-			Pattern pattern = Pattern.compile("((?![aeiou])[a-z])([aeiou])", Pattern.CASE_INSENSITIVE);
-			Matcher matcher = pattern.matcher(word);
+		if (!javaToFrench) {
 
-			if ( matcher.find() ) {
-				String matcherWord = matcher.replaceAll(matchResult -> matchResult.group(1) + "av" + matchResult.group(2));
-				translatedContent += matcherWord + " ";
+			for (int i = 0; i < splitInput.length; i++) {
+
+				Pattern pattern = Pattern.compile("((?![aàeioâuéèôöüy])[a-z])([aàeiouéâèôöüy])", Pattern.CASE_INSENSITIVE);
+				Matcher matcher = pattern.matcher(splitInput[i]);
+
+				if (matcher.find()) {
+					String matcherWord = matcher.replaceAll(matchResult -> matchResult.group(1) + "av" + matchResult.group(2));
+					splitInput[i] = matcherWord.toLowerCase();
+				}
+
+				Pattern exceptionPattern = Pattern.compile("^([aàeioâuéèôöüy])", Pattern.CASE_INSENSITIVE);
+				Matcher matcherException = exceptionPattern.matcher(splitInput[i]);
+
+				if (matcherException.find()) {
+					String matcherExceptionWord = matcherException.replaceFirst(matchResult -> "av" + matchResult.group(1));
+					splitInput[i] = matcherExceptionWord.toLowerCase();
+				}
 			}
 		}
 
-		return translatedContent;
-
-		/*	Cas pour un mot français dans une phrase :
-
-			On fait une substring pour isoler chaque mot
-			On va insérer "av" dans le mot en utilisant un pattern regex
-			A tester sur regex 101 kkchose comme : /((?![aeiou])[a-z]{2})([aeiou])/ig
-			Pour faire deux groupes : un avec la consonne et un avec la voyelle qui suit (case insensitive)
-			Comme ça avec un string.replace on peut remplacer cette portion avec la consonne (ciblée dans le premier groupe) + av + rajouter la voyelle (deuxième groupe)
-
-
-			Cas mot javanais
-
-			On fait une substring pour isoler chaque mot
-			On fait une regex pur capturer un "av" entre une consnne et une voyelle, kkchose comme : /(?:(?![aeiou])[a-z])(av)(?:[aeéèioôöuü])/ig
-			Ensuite on la remplace par du rien pur la supprimer
-		 */
-
-		/*
-			On retransforme la substring en string avant de la retourner
-		 */
+		return String.join(" ", splitInput);
 	}
 }

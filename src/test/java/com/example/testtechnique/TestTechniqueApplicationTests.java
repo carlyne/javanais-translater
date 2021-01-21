@@ -17,18 +17,17 @@ class TestTechniqueApplicationTests {
 
 		// Cas standards
 		Assert.assertEquals( "bavonjavour", classTested.translater("bonjour") );
-		/*Assert.assertEquals( "avexavemplave", classTested.translater("exemple") );
+		Assert.assertEquals( "avexavemplave", classTested.translater("exemple") );
 		Assert.assertEquals( "avau", classTested.translater("au") );
 
 		// Cas complexes
 		Assert.assertEquals( "chavantave", classTested.translater("Chante") );
 		Assert.assertEquals( "mavoyen", classTested.translater("MOYEN") );
-		Assert.assertEquals( "élavéphavant", classTested.translater("éléphant") );
+		Assert.assertEquals( "avélavéphavant", classTested.translater("éléphant") );
 		Assert.assertEquals( "javavava", classTested.translater("java") );
-		Assert.assertEquals( "lave gavataveau est un mavensavongave.", classTested.translater("Le gâteau est un mensonge.") );
+		Assert.assertEquals( "lave gavâtaveau avest avun mavensavongave.", classTested.translater("Le gâteau est un mensonge.") );
 
 		// Cas extremes
-		Assert.assertEquals( "Veuillez renseigner un mot ou une phrase", classTested.translater("") );
-		Assert.assertEquals( "Mot ou phrase incorrect", classTested.translater("s0le3il") );*/
+		Assert.assertEquals( "", classTested.translater("") );
 	}
 }
