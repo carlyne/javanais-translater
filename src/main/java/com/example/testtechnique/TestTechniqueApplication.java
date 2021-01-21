@@ -2,15 +2,17 @@ package com.example.testtechnique;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SpringBootApplication
 public class TestTechniqueApplication {
 
 	public static void main(String[] args) {
+		Boolean userHasQuit = false;
+
 		Scanner promptReader = new Scanner(System.in);
 		System.out.println("Bienvenue dans le traducteur français / javanais ! Entrez une phrase");
-
-		Boolean userHasQuit = false;
 
 		while (!userHasQuit) {
 			String userInput = promptReader.nextLine();
@@ -37,12 +39,25 @@ public class TestTechniqueApplication {
 		promptReader.close();
 	}
 
-	public static String translater(String input) {
+	public static String translater(String userInput) {
 
-		/*
-			Si input est vide :
-				On renvoi l'input vide
-		 */
+		if ( userInput.isEmpty() ) {
+			return userInput;
+		}
+
+		String translatedContent = "";
+
+		for ( String word : userInput.split("\\s+") ) {
+			Pattern pattern = Pattern.compile("((?![aeiou])[a-z])([aeiou])", Pattern.CASE_INSENSITIVE);
+			Matcher matcher = pattern.matcher(word);
+
+			if ( matcher.find() ) {
+				String matcherWord = matcher.replaceAll(matchResult -> matchResult.group(1) + "av" + matchResult.group(2));
+				translatedContent += matcherWord + " ";
+			}
+		}
+
+		return translatedContent;
 
 		/*	Cas pour un mot français dans une phrase :
 
@@ -63,7 +78,5 @@ public class TestTechniqueApplication {
 		/*
 			On retransforme la substring en string avant de la retourner
 		 */
-
-		return "bavonjavour";
 	}
 }
