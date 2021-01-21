@@ -9,29 +9,43 @@ import java.util.regex.Pattern;
 @SpringBootApplication
 public class TestTechniqueApplication {
 
+	static String vowels = "aàâeéèêëiïoôöüûuy";
+	static String prefix = "av";
+
 	public static void main(String[] args) {
 		Boolean userHasQuit = false;
 
 		Scanner promptReader = new Scanner(System.in);
-		System.out.println("Bienvenue dans le traducteur français / javanais ! Entrez une phrase");
+		System.out.println("Bienvenue dans le traducteur français / javanais !\n");
 
 		while (!userHasQuit) {
-			String userInput = promptReader.nextLine();
-			String translatedContent = translater(userInput);
+			String translatedContent =  new String();
 
-			if ( translatedContent.equals(userInput) ) {
-				System.out.println("La phrase n'est pas valide, veuillez réessayer avec une nouvelle phrase");
+			System.out.println("Souhaitez-vous traduire : \n - français <-> javanais (f) \n - javanais <-> français (j)\n");
+			String translatorChoosen = promptReader.nextLine();
+
+			System.out.println("Entrez un mot ou une phrase :");
+			String userInput = promptReader.nextLine();
+
+			if ( translatorChoosen.toLowerCase().equals("j") ) {
+				translatedContent = translaterJavaToFrench(userInput);
 
 			} else {
-				System.out.println(translatedContent);
-				System.out.println("Souhaitez-vous traduire une autre phase ? (Y)/(N)");
+				translatedContent = translateFrenchToJava(userInput);
+			}
+
+			if ( translatedContent.equals(userInput) ) {
+				System.out.println("Le texte n'est pas valide, veuillez réessayer");
+
+			} else {
+				System.out.println(translatedContent + "\n");
+				System.out.println("Souhaitez-vous traduire une autre phase ? (y) / (n)");
+
 				String userResponse = promptReader.nextLine();
 
 				if ( userResponse.toLowerCase().equals("n") ) {
 					userHasQuit = true;
 
-				} else {
-					System.out.println("Entrez une nouvelle phrase");
 				}
 			}
 		}
@@ -40,34 +54,56 @@ public class TestTechniqueApplication {
 		promptReader.close();
 	}
 
-	public static String translater(String userInput) {
-		Boolean javaToFrench = false;
-
+	public static String translateFrenchToJava(String userInput) {
 		if ( userInput.isEmpty() ) {
 			return userInput;
 		}
 
 		String [] splitInput = userInput.split("\\s+");
 
-		if (!javaToFrench) {
+		for (int i = 0; i < splitInput.length; i++) {
+			Pattern pattern = Pattern.compile("((?![" + vowels + "])[a-z])([" + vowels + "])", Pattern.CASE_INSENSITIVE);
+			Matcher matcher = pattern.matcher(splitInput[i]);
 
-			for (int i = 0; i < splitInput.length; i++) {
+			if (matcher.find()) {
+				String matcherWord = matcher.replaceAll(matchResult -> matchResult.group(1) + prefix + matchResult.group(2));
+				splitInput[i] = matcherWord.toLowerCase();
+			}
 
-				Pattern pattern = Pattern.compile("((?![aàeioâuéèôöüy])[a-z])([aàeiouéâèôöüy])", Pattern.CASE_INSENSITIVE);
-				Matcher matcher = pattern.matcher(splitInput[i]);
+			Pattern exceptionPattern = Pattern.compile("^([" + vowels + "])", Pattern.CASE_INSENSITIVE);
+			Matcher matcherException = exceptionPattern.matcher(splitInput[i]);
 
-				if (matcher.find()) {
-					String matcherWord = matcher.replaceAll(matchResult -> matchResult.group(1) + "av" + matchResult.group(2));
-					splitInput[i] = matcherWord.toLowerCase();
-				}
+			if (matcherException.find()) {
+				String matcherExceptionWord = matcherException.replaceFirst(matchResult -> prefix + matchResult.group(1));
+				splitInput[i] = matcherExceptionWord.toLowerCase();
+			}
+		}
 
-				Pattern exceptionPattern = Pattern.compile("^([aàeioâuéèôöüy])", Pattern.CASE_INSENSITIVE);
-				Matcher matcherException = exceptionPattern.matcher(splitInput[i]);
+		return String.join(" ", splitInput);
+	}
 
-				if (matcherException.find()) {
-					String matcherExceptionWord = matcherException.replaceFirst(matchResult -> "av" + matchResult.group(1));
-					splitInput[i] = matcherExceptionWord.toLowerCase();
-				}
+	public static String translaterJavaToFrench(String userInput) {
+		if ( userInput.isEmpty() ) {
+			return userInput;
+		}
+
+		String [] splitInput = userInput.split("\\s+");
+
+		for (int i = 0; i < splitInput.length; i++) {
+			Pattern pattern = Pattern.compile("((?![" + vowels + "])[a-z])(" + prefix + ")([" + vowels + "])", Pattern.CASE_INSENSITIVE);
+			Matcher matcher = pattern.matcher(splitInput[i]);
+
+			if (matcher.find()) {
+				String matcherWord = matcher.replaceAll(matchResult -> matchResult.group(1) + matchResult.group(3));
+				splitInput[i] = matcherWord.toLowerCase();
+			}
+
+			Pattern exceptionPattern = Pattern.compile("^" + prefix + "([" + vowels + "])", Pattern.CASE_INSENSITIVE);
+			Matcher matcherException = exceptionPattern.matcher(splitInput[i]);
+
+			if (matcherException.find()) {
+				String matcherExceptionWord = matcherException.replaceFirst(matchResult -> matchResult.group(1));
+				splitInput[i] = matcherExceptionWord.toLowerCase();
 			}
 		}
 

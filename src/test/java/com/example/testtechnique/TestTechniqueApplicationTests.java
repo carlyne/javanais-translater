@@ -16,18 +16,30 @@ class TestTechniqueApplicationTests {
 	void contextLoads() {
 
 		// Cas standards
-		Assert.assertEquals( "bavonjavour", classTested.translater("bonjour") );
-		Assert.assertEquals( "avexavemplave", classTested.translater("exemple") );
-		Assert.assertEquals( "avau", classTested.translater("au") );
+		Assert.assertEquals( "bavonjavour", classTested.translateFrenchToJava("bonjour") );
+		Assert.assertEquals( "bonjour", classTested.translaterJavaToFrench("bavonjavour") );
+
+		Assert.assertEquals( "avexavemplave", classTested.translateFrenchToJava("exemple") );
+		Assert.assertEquals( "exemple", classTested.translaterJavaToFrench("avexavemplave") );
+
 
 		// Cas complexes
-		Assert.assertEquals( "chavantave", classTested.translater("Chante") );
-		Assert.assertEquals( "mavoyen", classTested.translater("MOYEN") );
-		Assert.assertEquals( "avélavéphavant", classTested.translater("éléphant") );
-		Assert.assertEquals( "javavava", classTested.translater("java") );
-		Assert.assertEquals( "lave gavâtaveau avest avun mavensavongave.", classTested.translater("Le gâteau est un mensonge.") );
 
-		// Cas extremes
-		Assert.assertEquals( "", classTested.translater("") );
+		//Assert.assertEquals( "Chavantave", classTested.translateFrenchToJava("Chante") );
+		//Assert.assertEquals( "MAVOYEN", classTested.translateFrenchToJava("MOYEN") );
+
+		Assert.assertEquals( "avélavéphavant", classTested.translateFrenchToJava("éléphant") );
+		Assert.assertEquals( "éléphant", classTested.translaterJavaToFrench("avélavéphavant") );
+
+		Assert.assertEquals( "javavava", classTested.translateFrenchToJava("java") );
+		Assert.assertEquals( "java", classTested.translaterJavaToFrench("javavava") );
+
+		Assert.assertEquals( "lave gavâtaveau avest avun mavensavongave.", classTested.translateFrenchToJava("le gâteau est un mensonge.") );
+		Assert.assertEquals( "le gâteau est un mensonge.", classTested.translaterJavaToFrench("lave gavâtaveau avest avun mavensavongave.") );
+
+		// Cas exception
+		Assert.assertEquals( "", classTested.translateFrenchToJava("") );
+		Assert.assertEquals( "", classTested.translaterJavaToFrench("") );
+		Assert.assertEquals( "12345", classTested.translateFrenchToJava("12345") );
 	}
 }
